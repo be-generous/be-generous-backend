@@ -11,11 +11,12 @@ import java.util.stream.Collectors;
 public class UserDTOMapper implements Mapper<User, UserDTO> {
     @Override
     public UserDTO convertOne(User user) {
-        return new UserDTO.Builder()
-                .email(user.getEmail())
-                .fullName(user.getFullName())
-                .avatarURL(user.getAvatarURL())
-                .build();
+        return new UserDTO(
+                user.getEmail(),
+                "",
+                user.getFullName(),
+                user.getAvatarURL()
+        );
     }
 
     @Override

@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -22,8 +24,13 @@ public class UserController {
     private final UserEntityMapper userEntityMapper;
 
     @PostMapping(path = "/user")
-    public ResponseEntity<?> saveUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> saveUser(@Valid @RequestBody UserDTO userDTO) {
         return new ResponseEntity<>(userService.saveUser(userEntityMapper.convertOne(userDTO)), HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/user/update")
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserDTO userDTO) {
+        return new ResponseEntity<>(userService.updateUser(userEntityMapper.convertOne(userDTO)), HttpStatus.OK);
     }
 
     @PostMapping(path = "/user/addrole")

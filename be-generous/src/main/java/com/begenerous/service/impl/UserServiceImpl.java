@@ -19,6 +19,8 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static com.begenerous.util.RoleName.ROLE_USER;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -50,10 +52,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User saveUser(User user) {
-        // TODO check
         log.info("Saving {}", user.getFullName());
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepo.save(user);
+
+        User newUser = userRepo.save(user);
+        newUser.getRoles().add(roleRepo.findByName(ROLE_USER));
+        return newUser;
     }
 
     @Override
@@ -62,17 +67,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User updateUser(User user, String name) {
-        // TODO check
-        User userToUpdate = userRepo.findByEmail(name);
-        user.setUser_id(userToUpdate.getUser_id());
+    public User updateUser(User user) {
+        User userToUpdate = userRepo.findByEmail(user.getEmail());
 
-        return userRepo.save(user);
+        if(!userToUpdate.getPassword().equals(passwordEncoder.encode(user.getPassword()))) {
+            userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        if(!userToUpdate.getFullName().equals(user.getFullName())) {
+            userToUpdate.setFullName(user.getFullName());
+        }
+        if(!userToUpdate.getAvatarURL().equals(user.getAvatarURL())) {
+            userToUpdate.setAvatarURL(user.getAvatarURL());
+        }
+
+        return userRepo.save(userToUpdate);
     }
 
     @Override
     public Role saveRole(Role role) {
-        // TODO check
         log.info("Saving {}", role.getName());
         return roleRepo.save(role);
     }

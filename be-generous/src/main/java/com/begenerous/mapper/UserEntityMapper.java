@@ -4,6 +4,9 @@ import com.begenerous.DTO.UserDTO;
 import com.begenerous.model.User;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,8 +14,14 @@ import java.util.stream.Collectors;
 public class UserEntityMapper implements Mapper<UserDTO, User> {
     @Override
     public User convertOne(UserDTO userDTO) {
-        // TODO
-        return new User();
+        return new User(
+                null,
+                userDTO.getEmail(),
+                userDTO.getPassword(),
+                userDTO.getFullName(),
+                userDTO.getAvatarURL(),
+                new ArrayList<>()
+        );
     }
 
     @Override

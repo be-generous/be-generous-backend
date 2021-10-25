@@ -9,7 +9,7 @@ public interface UserService {
 
     User getUser(Long userId) throws RowNotFoundException;
 
-    User updateUser(User user, String name);
+    User updateUser(User user);
 
     Role saveRole(Role role);
 

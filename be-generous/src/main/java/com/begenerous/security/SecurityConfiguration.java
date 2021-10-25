@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.begenerous.util.RoleName.ROLE_ADMIN;
 import static com.begenerous.util.RoleName.ROLE_USER;
 
 @Configuration
@@ -40,7 +41,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/login/**").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority(ROLE_USER);
-//        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/addrole").hasAnyAuthority(ROLE_ADMIN);
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/update").hasAnyAuthority(ROLE_USER);
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/addrole").hasAnyAuthority(ROLE_ADMIN);
         http.authorizeRequests().anyRequest().authenticated();
 
         http.addFilter(customAuthenticationFilter);
