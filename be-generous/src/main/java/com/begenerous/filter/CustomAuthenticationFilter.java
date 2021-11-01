@@ -2,8 +2,10 @@ package com.begenerous.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.begenerous.repository.UserRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,9 +29,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final UserRepo userRepo;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, UserRepo userRepo) {
         this.authenticationManager = authenticationManager;
+        this.userRepo = userRepo;
     }
 
     /**
@@ -63,8 +67,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())) // The roles that the user has
                 .sign(algorithm);
 
-//        response.setHeader("access_token", access_token);
-
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", "Login successful!");
         responseBody.put("access_token", access_token);
@@ -73,4 +75,21 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
     }
 
+    /**
+     * If the auth is unsuccessful then this function is called
+     * error is included in response body
+     */
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        Map<String, String> responseBody = new HashMap<>();
+        com.begenerous.model.User user = userRepo.findByEmail(request.getHeader("Email"));
+        String errorMessage = "Bad credentials: " + (user == null ? "no account is registered with this email!" : "wrong password!");
+
+        responseBody.put("error", errorMessage);
+        responseBody.put("message", "Login unsuccessful!");
+
+        response.setContentType(APPLICATION_JSON_VALUE);
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
+    }
 }

@@ -2,6 +2,7 @@ package com.begenerous.security;
 
 import com.begenerous.filter.CustomAuthenticationFilter;
 import com.begenerous.filter.CustomAuthorizationFilter;
+import com.begenerous.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepo userRepo;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -34,7 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean(), userRepo);
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
 
         http.csrf().disable();

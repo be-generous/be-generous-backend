@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.begenerous.util.RoleName.ROLE_ADMIN;
@@ -33,9 +34,9 @@ public class BeGenerousApplication {
 	CommandLineRunner run(UserService userService, UserRepo userRepo, RoleRepo roleRepo) {
 		return args -> {
 			/** Only for init
-			userService.saveUser(new User(null, "john@email", "1234", "John Doe", "", Collections.emptyList()));
-			userService.saveUser(new User(null, "alex@email", "1234", "Alex Doe", "", Collections.emptyList()));
-			userService.saveUser(new User(null, "jane@email", "1234", "Jane Doe", "", Collections.emptyList()));
+			userService.saveUser(new User(null, "john@email", "1234", "John Doe", "", new ArrayList<>()));
+			userService.saveUser(new User(null, "alex@email", "1234", "Alex Doe", "", new ArrayList<>()));
+			userService.saveUser(new User(null, "jane@email", "1234", "Jane Doe", "", new ArrayList<>()));
 
 			userService.saveRole(new Role(null, ROLE_USER));
 			userService.saveRole(new Role(null, ROLE_ADMIN));
