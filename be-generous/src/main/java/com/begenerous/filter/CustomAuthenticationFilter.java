@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.begenerous.repository.UserRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,7 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final UserRepo userRepo;
-
+    private String line;
     public CustomAuthenticationFilter(AuthenticationManager authenticationManager, UserRepo userRepo) {
         this.authenticationManager = authenticationManager;
         this.userRepo = userRepo;
@@ -39,10 +40,14 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     /**
      * When the user tries to log in this method is called
      */
+    @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        line = request.getReader().readLine();
+        String[] splitLine = line.replaceAll("[{}]","").split(",");
+        String email = splitLine[0].split(":")[1].replace("\"","");
+        String password = splitLine[1].split(":")[1].replace("\"","");
+
         log.info("Email: {}", email);
         log.info("Password: {}", password);
 
@@ -82,14 +87,17 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         Map<String, String> responseBody = new HashMap<>();
-        com.begenerous.model.User user = userRepo.findByEmail(request.getHeader("Email"));
+
+        String[] splitLine = line.replaceAll("[{}]","").split(",");
+        String email = splitLine[0].split(":")[1].replace("\"","");
+        com.begenerous.model.User user = userRepo.findByEmail(email);
         String errorMessage = "Bad credentials: " + (user == null ? "no account is registered with this email!" : "wrong password!");
 
         responseBody.put("error", errorMessage);
         responseBody.put("message", "Login unsuccessful!");
 
         response.setContentType(APPLICATION_JSON_VALUE);
-        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
     }
 }
