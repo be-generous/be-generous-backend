@@ -9,9 +9,4 @@ public class RowNotFoundException extends Exception {
     public RowNotFoundException(String message) {
         super(message);
     }
-
-    public RowNotFoundException(String message, Exception e) {
-        super(message, e);
-    }
-
 }

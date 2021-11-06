@@ -63,6 +63,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         User user = (User) authResult.getPrincipal();
+        com.begenerous.model.User userFromRepo = userRepo.findByEmail(user.getUsername());
         // TODO Utils maybe?
         Algorithm algorithm = Algorithm.HMAC256("ThisShouldBeEncrypted".getBytes()); // Internal algorithm and secret key, so the token can't be changed
         String access_token = JWT.create()
@@ -72,9 +73,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())) // The roles that the user has
                 .sign(algorithm);
 
+
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", "Login successful!");
         responseBody.put("access_token", access_token);
+        responseBody.put("id", userFromRepo.getUser_id().toString());
 
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), responseBody);

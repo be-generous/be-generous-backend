@@ -18,8 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
-import static com.begenerous.util.RoleName.ROLE_ADMIN;
-import static com.begenerous.util.RoleName.ROLE_USER;
+import static com.begenerous.util.RoleNameUtils.ROLE_ADMIN;
+import static com.begenerous.util.RoleNameUtils.ROLE_USER;
 
 @Configuration
 @EnableWebSecurity

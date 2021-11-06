@@ -1,5 +1,6 @@
 package com.begenerous.service.impl;
 
+import com.begenerous.exception.DuplicatedEmailException;
 import com.begenerous.exception.RowNotFoundException;
 import com.begenerous.model.Role;
 import com.begenerous.model.User;
@@ -19,7 +20,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static com.begenerous.util.RoleName.ROLE_USER;
+import static com.begenerous.util.RoleNameUtils.ROLE_USER;
 
 @Service
 @RequiredArgsConstructor
@@ -54,16 +55,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User saveUser(User user) {
         log.info("Saving {}", user.getFullName());
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if(userRepo.findByEmail(user.getEmail()) != null) { throw new DuplicatedEmailException(); }
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User newUser = userRepo.save(user);
         newUser.getRoles().add(roleRepo.findByName(ROLE_USER));
         return newUser;
     }
 
     @Override
-    public User getUser(Long userId) throws RowNotFoundException {
-        return userRepo.findById(userId).orElseThrow(() -> new RowNotFoundException("Couldn't find user!"));
+    public User getUser(Long userId) {
+        return userRepo.findById(userId).get();
     }
 
     @Override

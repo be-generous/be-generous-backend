@@ -1,7 +1,5 @@
 package com.begenerous;
 
-import com.begenerous.model.Role;
-import com.begenerous.model.User;
 import com.begenerous.repository.RoleRepo;
 import com.begenerous.repository.UserRepo;
 import com.begenerous.service.UserService;
@@ -11,12 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.ArrayList;
-import java.util.Collections;
-
-import static com.begenerous.util.RoleName.ROLE_ADMIN;
-import static com.begenerous.util.RoleName.ROLE_USER;
 
 @SpringBootApplication
 public class BeGenerousApplication {
