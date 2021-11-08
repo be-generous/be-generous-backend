@@ -47,6 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/update").hasAnyAuthority(ROLE_USER);
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/addrole").hasAnyAuthority(ROLE_ADMIN);
+        http.authorizeRequests().antMatchers("/api/charity/**").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
 
         http.addFilter(customAuthenticationFilter);

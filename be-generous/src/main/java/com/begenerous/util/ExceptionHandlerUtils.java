@@ -14,4 +14,21 @@ public class ExceptionHandlerUtils {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    public static ResponseEntity<?> negativeAmountException(String message) {
+        Map<String, String> error = new HashMap<>();
+        error.put("errorMessage", message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    public static ResponseEntity<?> rowNotFoundException(String message) {
+        Map<String, String> error = new HashMap<>();
+        error.put("errorMessage", message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    public static ResponseEntity<?> internalException(String message) {
+        Map<String, String> error = new HashMap<>();
+        error.put("errorMessage", message);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
 }

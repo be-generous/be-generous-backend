@@ -77,7 +77,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", "Login successful!");
         responseBody.put("access_token", access_token);
-        responseBody.put("id", userFromRepo.getUser_id().toString());
+        responseBody.put("id", userFromRepo.getUserId().toString());
 
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), responseBody);

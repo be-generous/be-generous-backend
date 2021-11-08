@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Data
 @Entity
@@ -35,7 +34,7 @@ public class User {
     @Column(
             name = "user_id"
     )
-    private Long user_id;
+    private Long userId;
 
     @Column(
             name = "email",
@@ -60,5 +59,9 @@ public class User {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private Collection<Charity> charities = new ArrayList<>();
+
 
 }
