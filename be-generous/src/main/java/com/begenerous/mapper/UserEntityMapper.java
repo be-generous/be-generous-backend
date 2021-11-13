@@ -5,8 +5,6 @@ import com.begenerous.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +18,7 @@ public class UserEntityMapper implements Mapper<UserDTO, User> {
                 userDTO.getPassword(),
                 userDTO.getFullName(),
                 userDTO.getAvatarURL(),
+                new ArrayList<>(),
                 new ArrayList<>()
         );
     }
