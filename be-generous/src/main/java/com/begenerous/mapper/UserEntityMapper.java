@@ -17,9 +17,7 @@ public class UserEntityMapper implements Mapper<UserDTO, User> {
                 userDTO.getEmail(),
                 userDTO.getPassword(),
                 userDTO.getFullName(),
-                userDTO.getAvatarURL(),
-                new ArrayList<>(),
-                new ArrayList<>()
+                userDTO.getAvatarURL()
         );
     }
 
