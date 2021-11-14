@@ -31,4 +31,10 @@ public class ExceptionHandlerUtils {
         error.put("errorMessage", message);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
+
+    public static ResponseEntity<?> unexpectedException(String message) {
+        Map<String, String> error = new HashMap<>();
+        error.put("errorMessage", "An unexpected error occurred on server side." + message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 }
