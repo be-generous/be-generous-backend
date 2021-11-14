@@ -8,6 +8,8 @@ import org.apache.tomcat.jni.Local;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -67,4 +69,21 @@ public class Charity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "charity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Collection<Comment> comment = new ArrayList<>();
+
+    @OneToMany(mappedBy = "charity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Collection<Donation> donation = new ArrayList<>();
+
+    public Charity(Long charityId, Double goalAmount, Double currentAmount, String coverImageURL, String title, String description, LocalDate dateCreated, User user) {
+        this.charityId = charityId;
+        this.goalAmount = goalAmount;
+        this.currentAmount = currentAmount;
+        this.coverImageURL = coverImageURL;
+        this.title = title;
+        this.description = description;
+        this.dateCreated = dateCreated;
+        this.user = user;
+    }
 }
