@@ -13,7 +13,7 @@ public interface CharityService {
 
     Charity updateCharity(Charity charity, Long userId) throws RowNotFoundException;
 
-    Charity addAmountToCharity(Long charityId, Double amount) throws RowNotFoundException;
+    Charity addAmountToCharity(Double amount, Long charityId) throws RowNotFoundException;
 
     List<Charity> getCharities();
 }

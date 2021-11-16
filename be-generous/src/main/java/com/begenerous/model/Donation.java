@@ -5,9 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Data
 @Entity
@@ -54,4 +51,10 @@ public class Donation {
     @ManyToOne
     @JoinColumn(name = "charity_id", nullable = false)
     private Charity charity;
+
+    public Donation(Double amount, String message, long transactionDate) {
+        this.amount = amount;
+        this.message = message;
+        this.transactionDate = transactionDate;
+    }
 }

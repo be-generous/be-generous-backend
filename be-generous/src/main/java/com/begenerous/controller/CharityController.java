@@ -1,6 +1,5 @@
 package com.begenerous.controller;
 
-import com.begenerous.DTO.AmountDTO;
 import com.begenerous.DTO.CharityDTO;
 import com.begenerous.exception.NegativeAmountException;
 import com.begenerous.exception.RowNotFoundException;
@@ -82,15 +81,6 @@ public class CharityController {
             return new ResponseEntity<>(charityDTOMapper.convertOne(charityService.getCharity(charityId)), HttpStatus.OK);
         } catch (Exception e) {
             return ExceptionHandlerUtils.invalidInputException("No charity with the id: " + charityId);
-        }
-    }
-
-    @PostMapping("/addamount")
-    ResponseEntity<?> addAmountToCharity(@Valid @RequestBody AmountDTO amountDTO) {
-        try {
-            return new ResponseEntity<>(charityService.addAmountToCharity(amountDTO.getCharityId(), amountDTO.getAmount()), HttpStatus.OK);
-        } catch (Exception e) {
-            return ExceptionHandlerUtils.invalidInputException("No charity with the id: " + amountDTO.getCharityId());
         }
     }
 }

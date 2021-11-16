@@ -1,5 +1,6 @@
 package com.begenerous.service.impl;
 
+import com.begenerous.exception.NegativeAmountException;
 import com.begenerous.exception.NoCreditCardFoundException;
 import com.begenerous.exception.RowNotFoundException;
 import com.begenerous.model.CreditCard;
@@ -68,5 +69,15 @@ public class CreditCardServiceImpl implements CreditCardService {
         } catch (Exception e) {
             throw new RowNotFoundException("Couldn't delete credit card: " + e.getMessage());
         }
+    }
+
+    @Override
+    public void payAmountFromCreditCard(Double amount, Long creditCardId) throws RowNotFoundException, NegativeAmountException {
+        CreditCard creditCard = creditCardRepo.findById(creditCardId).orElseThrow(() -> new RowNotFoundException("No credit card exists with the id: " + creditCardId));
+
+        if(creditCard.getBalance()-amount < 0) {
+            throw new NegativeAmountException("Transaction failed, credit card balance can't go bellow 0.");
+        }
+        creditCard.setBalance(creditCard.getBalance() - amount);
     }
 }
