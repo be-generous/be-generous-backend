@@ -1,5 +1,6 @@
 package com.begenerous.service.impl;
 
+import com.begenerous.exception.NoCreditCardFoundException;
 import com.begenerous.exception.RowNotFoundException;
 import com.begenerous.model.CreditCard;
 import com.begenerous.model.User;
@@ -32,13 +33,23 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     @Override
-    public CreditCard getCreditCard(Long creditCardId) throws RowNotFoundException {
-        return creditCardRepo.findById(creditCardId).orElseThrow(() -> new RowNotFoundException("No credit card with the id: " + creditCardId));
+    public List<CreditCard> getCreditCards(Long userId) throws NoCreditCardFoundException {
+        List<CreditCard> listOfCreditCards = creditCardRepo.findAllByUserId(userId);
+        if (listOfCreditCards.size() == 0) {
+            throw new NoCreditCardFoundException("No credit card is registered to the user with the id: " + userId);
+        }
+        listOfCreditCards.forEach(creditCard -> {
+            creditCard.setCardNumber(blurCreditCardNumber(creditCard.getCardNumber()));
+        });
+
+        return listOfCreditCards;
     }
 
-    @Override
-    public List<CreditCard> getCreditCards() {
-        return creditCardRepo.findAll();
+    private String blurCreditCardNumber(String cardNumber) {
+        return new StringBuilder()
+                .append("**** **** **** ")
+                .append(cardNumber.substring(cardNumber.length()-4))
+                .toString();
     }
 
     @Override

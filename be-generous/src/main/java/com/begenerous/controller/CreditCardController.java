@@ -1,9 +1,12 @@
 package com.begenerous.controller;
 
 import com.begenerous.DTO.CreditCardDTO;
+import com.begenerous.DTO.ResponseCreditCardDTO;
+import com.begenerous.exception.NoCreditCardFoundException;
 import com.begenerous.exception.RowNotFoundException;
 import com.begenerous.mapper.CreditCardDTOMapper;
 import com.begenerous.mapper.CreditCardEntityMapper;
+import com.begenerous.mapper.ResponseCreditCardDTOMapper;
 import com.begenerous.model.CreditCard;
 import com.begenerous.service.CreditCardService;
 import com.begenerous.util.ExceptionHandlerUtils;
@@ -25,6 +28,7 @@ public class CreditCardController {
     private final CreditCardService creditCardService;
     private final CreditCardDTOMapper creditCardDTOMapper;
     private final CreditCardEntityMapper creditCardEntityMapper;
+    private final ResponseCreditCardDTOMapper responseCreditCardDTOMapper;
 
     @PostMapping
     public ResponseEntity<?> saveCreditCard(@Valid @RequestBody CreditCardDTO creditCardDTO) {
@@ -44,16 +48,14 @@ public class CreditCardController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getCreditCards() {
-        return new ResponseEntity<>(creditCardDTOMapper.convertList(creditCardService.getCreditCards()), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/{creditCardId}")
-    public ResponseEntity<?> getCreditCard(@PathVariable("creditCardId") Long creditCardId) {
+    public ResponseEntity<?> getCreditCard(@RequestParam String id) {
         try {
-            return new ResponseEntity<>(creditCardDTOMapper.convertOne(creditCardService.getCreditCard(creditCardId)), HttpStatus.OK);
-        } catch (RowNotFoundException e) {
-            return ExceptionHandlerUtils.rowNotFoundException(e.getMessage());
+            Long userId = Long.valueOf(id);
+            return new ResponseEntity<>(responseCreditCardDTOMapper.convertList(creditCardService.getCreditCards(userId)), HttpStatus.OK);
+        } catch (NoCreditCardFoundException e) {
+            return ExceptionHandlerUtils.noCreditCardFoundException(e.getMessage());
+        } catch (Exception e) {
+            return ExceptionHandlerUtils.unexpectedException(e.getMessage());
         }
     }
 
