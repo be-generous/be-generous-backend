@@ -45,7 +45,7 @@ public class Comment {
     @Column(
             name = "date"
     )
-    private LocalDate dateCreated;
+    private Long dateCreated;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

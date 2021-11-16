@@ -69,16 +69,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User updateUser(User user) {
-        User userToUpdate = userRepo.findByEmail(user.getEmail());
+    public User updateUser(User user) throws RowNotFoundException {
+        User userToUpdate = userRepo.findById(user.getUserId()).orElseThrow(() -> new RowNotFoundException("Couldn't find user!"));
 
-        if(!userToUpdate.getPassword().equals(passwordEncoder.encode(user.getPassword()))) {
+        if(!userToUpdate.getPassword().equals(passwordEncoder.encode(user.getPassword())) && !user.getPassword().equals("")) {
             userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        if(!userToUpdate.getFullName().equals(user.getFullName())) {
+        if(!userToUpdate.getFullName().equals(user.getFullName()) && !user.getFullName().equals("")) {
             userToUpdate.setFullName(user.getFullName());
         }
-        if(!userToUpdate.getAvatarURL().equals(user.getAvatarURL())) {
+        if(!userToUpdate.getEmail().equals(user.getEmail()) && !user.getEmail().equals("")) {
+            userToUpdate.setEmail(user.getEmail());
+        }
+        if(!userToUpdate.getAvatarURL().equals(user.getAvatarURL()) && !user.getAvatarURL().equals("")) {
             userToUpdate.setAvatarURL(user.getAvatarURL());
         }
 

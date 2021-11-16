@@ -26,6 +26,12 @@ public class ExceptionHandlerUtils {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    public static ResponseEntity<?> noCreditCardFoundException(String message) {
+        Map<String, String> error = new HashMap<>();
+        error.put("errorMessage", message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
     public static ResponseEntity<?> internalException(String message) {
         Map<String, String> error = new HashMap<>();
         error.put("errorMessage", message);

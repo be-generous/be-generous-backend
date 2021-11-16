@@ -15,6 +15,7 @@ public class CreditCardDTOMapper implements Mapper<CreditCard, CreditCardDTO> {
         return new CreditCardDTO(
                 creditCard.getCreditCardId(),
                 creditCard.getCardNumber(),
+                creditCard.getName(),
                 creditCard.getCVV(),
                 creditCard.getExpireDate(),
                 creditCard.getBalance(),

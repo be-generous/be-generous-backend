@@ -18,6 +18,6 @@ public class CharityDTO {
     private String coverImageURL;
     private String title;
     private String description;
-    private LocalDate dateCreated;
+    private Long dateCreated;
     private Long userId;
 }

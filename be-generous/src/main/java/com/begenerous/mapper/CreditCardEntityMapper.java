@@ -16,6 +16,7 @@ public class CreditCardEntityMapper implements Mapper<CreditCardDTO, CreditCard>
         return new CreditCard(
                 null,
                 creditCardDTO.getCardNumber(),
+                creditCardDTO.getName(),
                 creditCardDTO.getCVV(),
                 creditCardDTO.getExpireDate(),
                 creditCardDTO.getBalance(),

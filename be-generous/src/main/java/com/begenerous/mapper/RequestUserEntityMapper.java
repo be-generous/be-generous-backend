@@ -1,19 +1,18 @@
 package com.begenerous.mapper;
 
-import com.begenerous.DTO.UserDTO;
+import com.begenerous.DTO.RequestUserDTO;
 import com.begenerous.model.User;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class UserEntityMapper implements Mapper<UserDTO, User> {
+public class RequestUserEntityMapper implements Mapper<RequestUserDTO, User> {
     @Override
-    public User convertOne(UserDTO userDTO) {
+    public User convertOne(RequestUserDTO userDTO) {
         return new User(
-                null,
+                userDTO.getUserId(),
                 userDTO.getEmail(),
                 userDTO.getPassword(),
                 userDTO.getFullName(),
@@ -22,7 +21,7 @@ public class UserEntityMapper implements Mapper<UserDTO, User> {
     }
 
     @Override
-    public List<User> convertList(List<UserDTO> userDTOs) {
+    public List<User> convertList(List<RequestUserDTO> userDTOs) {
         return userDTOs.stream().map(this::convertOne).collect(Collectors.toList());
     }
 }
