@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Component
@@ -15,11 +16,11 @@ public class CharityEntityMapper implements Mapper<CharityDTO, Charity> {
         return new Charity(
                 null,
                 charityDTO.getGoalAmount(),
-                charityDTO.getCurrentAmount(),
+                0.0,
                 charityDTO.getCoverImageURL(),
                 charityDTO.getTitle(),
                 charityDTO.getDescription(),
-                LocalDate.now(),
+                TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()),
                 null
         );
     }

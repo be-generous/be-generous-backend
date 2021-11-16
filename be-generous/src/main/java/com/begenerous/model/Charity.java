@@ -52,7 +52,8 @@ public class Charity {
     private String coverImageURL;
 
     @Column(
-            name = "title"
+            name = "title",
+            nullable = false
     )
     private String title;
 
@@ -62,9 +63,10 @@ public class Charity {
     private String description;
 
     @Column(
-            name = "date_created"
+            name = "date_created",
+            nullable = false
     )
-    private LocalDate dateCreated;
+    private Long dateCreated;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -76,7 +78,7 @@ public class Charity {
     @OneToMany(mappedBy = "charity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Collection<Donation> donation = new ArrayList<>();
 
-    public Charity(Long charityId, Double goalAmount, Double currentAmount, String coverImageURL, String title, String description, LocalDate dateCreated, User user) {
+    public Charity(Long charityId, Double goalAmount, Double currentAmount, String coverImageURL, String title, String description, Long dateCreated, User user) {
         this.charityId = charityId;
         this.goalAmount = goalAmount;
         this.currentAmount = currentAmount;

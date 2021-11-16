@@ -45,7 +45,7 @@ public class Donation {
     @Column(
             name = "date"
     )
-    private LocalDate transactionDate;
+    private Long transactionDate;
 
     @ManyToOne
     @JoinColumn(name = "credit_card_id", nullable = false)
