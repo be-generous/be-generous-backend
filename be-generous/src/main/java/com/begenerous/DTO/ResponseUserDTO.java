@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class ResponseUserDTO {
 
-    private Long creditCardId;
+    private Long userId;
     private String email;
     private String fullName;
     private String avatarURL;

@@ -12,7 +12,7 @@ public class RequestUserDTOMapper implements Mapper<User, RequestUserDTO> {
     @Override
     public RequestUserDTO convertOne(User user) {
         return new RequestUserDTO(
-                null,
+                user.getUserId(),
                 user.getEmail(),
                 "",
                 user.getFullName(),

@@ -4,6 +4,7 @@ import com.begenerous.DTO.ResponseUserDTO;
 import com.begenerous.DTO.RoleToUserDTO;
 import com.begenerous.DTO.RequestUserDTO;
 import com.begenerous.exception.DuplicatedEmailException;
+import com.begenerous.exception.RowNotFoundException;
 import com.begenerous.mapper.RequestUserDTOMapper;
 import com.begenerous.mapper.RequestUserEntityMapper;
 import com.begenerous.mapper.ResponseUserDTOMapper;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api")
@@ -42,8 +45,17 @@ public class UserController {
 
     @PostMapping(path = "/user/update")
     public ResponseEntity<?> updateUser(@Valid @RequestBody RequestUserDTO requestUserDTO) {
-        // TODO return specific message
-        return new ResponseEntity<>(userService.updateUser(requestuserEntityMapper.convertOne(requestUserDTO)), HttpStatus.OK);
+        try {
+            userService.updateUser(requestuserEntityMapper.convertOne(requestUserDTO));
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", "User updated successfully!");
+
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        } catch (RowNotFoundException e) {
+            return ExceptionHandlerUtils.rowNotFoundException(e.getMessage());
+        } catch (Exception e) {
+            return ExceptionHandlerUtils.unexpectedException(e.getMessage());
+        }
     }
 
     @PostMapping(path = "/user/addrole")

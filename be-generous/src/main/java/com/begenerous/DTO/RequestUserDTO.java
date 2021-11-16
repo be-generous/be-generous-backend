@@ -12,13 +12,10 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class RequestUserDTO {
 
-    private Long userId;
+    private Long userId = 0L;
     @Email
-    @NotBlank(message = "Email is mandatory")
-    private String email;
-    @NotBlank(message = "Password is mandatory")
-    private String password;
-    @NotBlank(message = "Name is mandatory")
-    private String fullName;
-    private String avatarURL;
+    private String email = "";
+    private String password = "";
+    private String fullName = "";
+    private String avatarURL = "";
 }

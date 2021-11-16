@@ -12,7 +12,7 @@ public class RequestUserEntityMapper implements Mapper<RequestUserDTO, User> {
     @Override
     public User convertOne(RequestUserDTO userDTO) {
         return new User(
-                null,
+                userDTO.getUserId(),
                 userDTO.getEmail(),
                 userDTO.getPassword(),
                 userDTO.getFullName(),
