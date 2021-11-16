@@ -34,23 +34,34 @@ public class CreditCard {
 
     @Column(
             name = "card_number",
-            length = 20
+            length = 20,
+            nullable = false
     )
     private String cardNumber;
 
     @Column(
+            name = "name",
+            length = 26,
+            nullable = false
+    )
+    private String name;
+
+    @Column(
             name = "CVV",
-            length = 3
+            length = 3,
+            nullable = false
     )
     private String CVV;
 
     @Column(
-            name = "expire_date"
+            name = "expire_date",
+            nullable = false
     )
     private LocalDate expireDate;
 
     @Column(
-            name = "balance"
+            name = "balance",
+            nullable = false
     )
     private Double balance;
 

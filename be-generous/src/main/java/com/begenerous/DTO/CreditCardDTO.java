@@ -15,6 +15,7 @@ public class CreditCardDTO {
     // TODO add validation
     private Long creditCardId;
     private String cardNumber;
+    private String name;
     private String CVV;
     private LocalDate expireDate;
     private Double balance;
