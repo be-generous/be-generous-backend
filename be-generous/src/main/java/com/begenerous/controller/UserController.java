@@ -8,9 +8,12 @@ import com.begenerous.exception.RowNotFoundException;
 import com.begenerous.mapper.RequestUserDTOMapper;
 import com.begenerous.mapper.RequestUserEntityMapper;
 import com.begenerous.mapper.ResponseUserDTOMapper;
+import com.begenerous.model.Charity;
 import com.begenerous.model.Role;
+import com.begenerous.model.User;
 import com.begenerous.service.UserService;
 import com.begenerous.util.ExceptionHandlerUtils;
+import com.begenerous.util.ResponseBodyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +37,15 @@ public class UserController {
     @PostMapping(path = "/user")
     public ResponseEntity<?> saveUser(@Valid @RequestBody RequestUserDTO userDTO) {
         try {
-            // TODO return specific message
-            return new ResponseEntity<>(userService.saveUser(requestuserEntityMapper.convertOne(userDTO)), HttpStatus.OK);
+            User user = userService.saveUser(
+                    requestuserEntityMapper.convertOne(userDTO)
+            );
+
+            ResponseBodyUtil responseBodyUtil = new ResponseBodyUtil();
+            responseBodyUtil.addToResponseBody("message", "User successfully created!");
+            responseBodyUtil.addToResponseBody("userId", user.getUserId().toString());
+
+            return new ResponseEntity<>(responseBodyUtil.createResponseBody(), HttpStatus.OK);
         } catch (DuplicatedEmailException e) {
             return ExceptionHandlerUtils.invalidInputException("There is already a user registered with this email address!");
         } catch (Exception e) {
@@ -46,11 +56,14 @@ public class UserController {
     @PostMapping(path = "/user/update")
     public ResponseEntity<?> updateUser(@Valid @RequestBody RequestUserDTO requestUserDTO) {
         try {
-            userService.updateUser(requestuserEntityMapper.convertOne(requestUserDTO));
-            Map<String, String> responseBody = new HashMap<>();
-            responseBody.put("message", "User updated successfully!");
+            userService.updateUser(
+                    requestuserEntityMapper.convertOne(requestUserDTO)
+            );
 
-            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+            ResponseBodyUtil responseBodyUtil = new ResponseBodyUtil();
+            responseBodyUtil.addToResponseBody("message", "User successfully updated!");
+
+            return new ResponseEntity<>(responseBodyUtil.createResponseBody(), HttpStatus.OK);
         } catch (RowNotFoundException e) {
             return ExceptionHandlerUtils.rowNotFoundException(e.getMessage());
         } catch (Exception e) {
@@ -61,7 +74,6 @@ public class UserController {
     @PostMapping(path = "/user/addrole")
     public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserDTO roleToUserDTO) {
         try {
-            // TODO return specific message
             return new ResponseEntity<>(userService.addRoleToUser(roleToUserDTO.getUserId(), roleToUserDTO.getRoleId()), HttpStatus.OK);
         }
         catch (Exception e) {
@@ -81,7 +93,6 @@ public class UserController {
 
     @PostMapping(path = "/role/")
     public ResponseEntity<?> saveRole(@RequestBody Role role) {
-        // TODO return specific message
         return new ResponseEntity<>(userService.saveRole(role), HttpStatus.OK);
     }
 

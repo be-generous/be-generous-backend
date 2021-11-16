@@ -10,6 +10,7 @@ import com.begenerous.model.Charity;
 import com.begenerous.service.CharityService;
 import com.begenerous.service.UserService;
 import com.begenerous.util.ExceptionHandlerUtils;
+import com.begenerous.util.ResponseBodyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +31,16 @@ public class CharityController {
     @PostMapping
     public ResponseEntity<?> saveCharity(@Valid @RequestBody CharityDTO charityDTO) {
         try {
-            Charity charity = charityEntityMapper.convertOne(charityDTO);
-            charity = charityService.saveCharity(charity, charityDTO.getUserId());
-            return new ResponseEntity<>(charityDTOMapper.convertOne(charity), HttpStatus.OK);
+            Charity charity = charityService.saveCharity(
+                    charityEntityMapper.convertOne(charityDTO),
+                    charityDTO.getUserId()
+            );
+
+            ResponseBodyUtil responseBodyUtil = new ResponseBodyUtil();
+            responseBodyUtil.addToResponseBody("message", "Charity successfully created!");
+            responseBodyUtil.addToResponseBody("charityId", charity.getCharityId().toString());
+
+            return new ResponseEntity<>(responseBodyUtil.createResponseBody(), HttpStatus.OK);
         } catch (NegativeAmountException e) {
             return ExceptionHandlerUtils.negativeAmountException(e.getMessage());
         } catch (RowNotFoundException e) {
@@ -45,8 +53,15 @@ public class CharityController {
     @PostMapping(path = "/update")
     public ResponseEntity<?> updateCharity(@Valid @RequestBody CharityDTO charityDTO) {
         try {
-            Charity charity = charityService.updateCharity(charityEntityMapper.convertOne(charityDTO), charityDTO.getUserId());
-            return new ResponseEntity<>(charityDTOMapper.convertOne(charity), HttpStatus.OK);
+            charityService.updateCharity(
+                    charityEntityMapper.convertOne(charityDTO),
+                    charityDTO.getUserId()
+            );
+
+            ResponseBodyUtil responseBodyUtil = new ResponseBodyUtil();
+            responseBodyUtil.addToResponseBody("message", "Charity successfully updated!");
+
+            return new ResponseEntity<>(responseBodyUtil.createResponseBody(), HttpStatus.OK);
         } catch (RowNotFoundException e) {
             return ExceptionHandlerUtils.rowNotFoundException(e.getMessage());
         }

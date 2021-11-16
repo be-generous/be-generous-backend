@@ -7,6 +7,7 @@ import com.begenerous.mapper.CreditCardEntityMapper;
 import com.begenerous.model.CreditCard;
 import com.begenerous.service.CreditCardService;
 import com.begenerous.util.ExceptionHandlerUtils;
+import com.begenerous.util.ResponseBodyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +33,11 @@ public class CreditCardController {
                     creditCardEntityMapper.convertOne(creditCardDTO),
                     creditCardDTO.getUserId()
             );
-            Map<String, String> responseBody = new HashMap<>();
-            responseBody.put("message", "Credit card successfully created!");
-            responseBody.put("creditCardId", creditCard.getCreditCardId().toString());
+            ResponseBodyUtil responseBodyUtil = new ResponseBodyUtil();
+            responseBodyUtil.addToResponseBody("message", "Credit card successfully created!");
+            responseBodyUtil.addToResponseBody("creditCardId", creditCard.getCreditCardId().toString());
 
-            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+            return new ResponseEntity<>(responseBodyUtil.createResponseBody(), HttpStatus.OK);
         } catch (RowNotFoundException e) {
             return ExceptionHandlerUtils.rowNotFoundException(e.getMessage());
         }
@@ -62,7 +63,11 @@ public class CreditCardController {
             creditCardService.updateCreditCard(
                     creditCardEntityMapper.convertOne(creditCardDTO)
             );
-            return new ResponseEntity<>("Successfully updated", HttpStatus.OK);
+
+            ResponseBodyUtil responseBodyUtil = new ResponseBodyUtil();
+            responseBodyUtil.addToResponseBody("message", "Credit card successfully updated!");
+
+            return new ResponseEntity<>(responseBodyUtil.createResponseBody(), HttpStatus.OK);
         } catch (RowNotFoundException e) {
             return ExceptionHandlerUtils.unexpectedException(e.getMessage());
         }
@@ -72,7 +77,11 @@ public class CreditCardController {
     public ResponseEntity<?> deleteCreditCard(@PathVariable("creditCardId") Long creditCardId) {
         try {
             creditCardService.deleteCreditCard(creditCardId);
-            return new ResponseEntity<>("Successfully deleted", HttpStatus.OK);
+
+            ResponseBodyUtil responseBodyUtil = new ResponseBodyUtil();
+            responseBodyUtil.addToResponseBody("message", "Credit card successfully deleted!");
+
+            return new ResponseEntity<>(responseBodyUtil.createResponseBody(), HttpStatus.OK);
         } catch (RowNotFoundException e) {
             return ExceptionHandlerUtils.unexpectedException(e.getMessage());
         }
