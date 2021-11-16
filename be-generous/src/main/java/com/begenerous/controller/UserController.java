@@ -1,12 +1,12 @@
 package com.begenerous.controller;
 
+import com.begenerous.DTO.ResponseUserDTO;
 import com.begenerous.DTO.RoleToUserDTO;
-import com.begenerous.DTO.UserDTO;
+import com.begenerous.DTO.RequestUserDTO;
 import com.begenerous.exception.DuplicatedEmailException;
-import com.begenerous.exception.InvalidInputException;
-import com.begenerous.exception.RowNotFoundException;
-import com.begenerous.mapper.UserDTOMapper;
-import com.begenerous.mapper.UserEntityMapper;
+import com.begenerous.mapper.RequestUserDTOMapper;
+import com.begenerous.mapper.RequestUserEntityMapper;
+import com.begenerous.mapper.ResponseUserDTOMapper;
 import com.begenerous.model.Role;
 import com.begenerous.service.UserService;
 import com.begenerous.util.ExceptionHandlerUtils;
@@ -23,13 +23,16 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserDTOMapper userDTOMapper;
-    private final UserEntityMapper userEntityMapper;
+    // TODO delete later if not needed anymore
+    private final RequestUserDTOMapper requestUserDTOMapper;
+    private final RequestUserEntityMapper requestuserEntityMapper;
+    private final ResponseUserDTOMapper responseUserDTOMapper;
 
     @PostMapping(path = "/user")
-    public ResponseEntity<?> saveUser(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> saveUser(@Valid @RequestBody RequestUserDTO userDTO) {
         try {
-            return new ResponseEntity<>(userService.saveUser(userEntityMapper.convertOne(userDTO)), HttpStatus.OK);
+            // TODO return specific message
+            return new ResponseEntity<>(userService.saveUser(requestuserEntityMapper.convertOne(userDTO)), HttpStatus.OK);
         } catch (DuplicatedEmailException e) {
             return ExceptionHandlerUtils.invalidInputException("There is already a user registered with this email address!");
         } catch (Exception e) {
@@ -38,13 +41,15 @@ public class UserController {
     }
 
     @PostMapping(path = "/user/update")
-    public ResponseEntity<?> updateUser(@Valid @RequestBody UserDTO userDTO) {
-        return new ResponseEntity<>(userService.updateUser(userEntityMapper.convertOne(userDTO)), HttpStatus.OK);
+    public ResponseEntity<?> updateUser(@Valid @RequestBody RequestUserDTO requestUserDTO) {
+        // TODO return specific message
+        return new ResponseEntity<>(userService.updateUser(requestuserEntityMapper.convertOne(requestUserDTO)), HttpStatus.OK);
     }
 
     @PostMapping(path = "/user/addrole")
     public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserDTO roleToUserDTO) {
         try {
+            // TODO return specific message
             return new ResponseEntity<>(userService.addRoleToUser(roleToUserDTO.getUserId(), roleToUserDTO.getRoleId()), HttpStatus.OK);
         }
         catch (Exception e) {
@@ -55,7 +60,7 @@ public class UserController {
     @GetMapping(path = "/user/{userId}")
     public ResponseEntity<?> getUser(@PathVariable("userId") Long userId) {
         try {
-            return new ResponseEntity<>(userDTOMapper.convertOne(userService.getUser(userId)), HttpStatus.OK);
+            return new ResponseEntity<>(responseUserDTOMapper.convertOne(userService.getUser(userId)), HttpStatus.OK);
         }
         catch (Exception e) {
             return ExceptionHandlerUtils.invalidInputException("No user with the id: " + userId);
@@ -64,6 +69,7 @@ public class UserController {
 
     @PostMapping(path = "/role/")
     public ResponseEntity<?> saveRole(@RequestBody Role role) {
+        // TODO return specific message
         return new ResponseEntity<>(userService.saveRole(role), HttpStatus.OK);
     }
 

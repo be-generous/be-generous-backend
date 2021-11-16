@@ -10,8 +10,9 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class RequestUserDTO {
 
+    private Long userId;
     @Email
     @NotBlank(message = "Email is mandatory")
     private String email;
