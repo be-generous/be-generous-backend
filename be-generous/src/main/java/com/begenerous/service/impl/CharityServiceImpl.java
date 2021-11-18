@@ -55,7 +55,7 @@ public class CharityServiceImpl implements CharityService {
     }
 
     @Override
-    public Charity addAmountToCharity(Long charityId, Double amount) throws RowNotFoundException {
+    public Charity addAmountToCharity(Double amount, Long charityId) throws RowNotFoundException {
         Charity charity = charityRepo.findById(charityId).orElseThrow(() -> new RowNotFoundException("No charity exists with the id: " + charityId));
         charity.setCurrentAmount(charity.getCurrentAmount() + amount);
 
