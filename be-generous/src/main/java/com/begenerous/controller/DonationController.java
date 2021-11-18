@@ -13,11 +13,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -45,6 +44,42 @@ public class DonationController {
             return ExceptionHandlerUtils.rowNotFoundException(e.getMessage());
         } catch (NegativeAmountException e) {
             return ExceptionHandlerUtils.negativeAmountException(e.getMessage());
+        } catch (Exception e) {
+            return ExceptionHandlerUtils.unexpectedException(e.getMessage());
+        }
+    }
+
+    @GetMapping(path = "/charity/{charityId}")
+    public ResponseEntity<?> getDonationsByCharity(@PathVariable("charityId") Long charityId) {
+        try {
+            List<Donation> donations = donationService.getDonationByCharity(charityId);
+            return new ResponseEntity<>(donationDTOMapper.convertList(donations), HttpStatus.OK);
+        } catch (RowNotFoundException e) {
+            return ExceptionHandlerUtils.rowNotFoundException(e.getMessage());
+        } catch (Exception e) {
+            return ExceptionHandlerUtils.unexpectedException(e.getMessage());
+        }
+    }
+
+    @GetMapping(path = "/user/{userId}")
+    public ResponseEntity<?> getDonationsByUser(@PathVariable("userId") Long userId) {
+        try {
+            List<Donation> donations = donationService.getDonationByUser(userId);
+            return new ResponseEntity<>(donationDTOMapper.convertList(donations), HttpStatus.OK);
+        } catch (RowNotFoundException e) {
+            return ExceptionHandlerUtils.rowNotFoundException(e.getMessage());
+        } catch (Exception e) {
+            return ExceptionHandlerUtils.unexpectedException(e.getMessage());
+        }
+    }
+
+    @GetMapping(path = "/creditcard/{creditCardId}")
+    public ResponseEntity<?> getDonationsByCreditCard(@PathVariable("creditCardId") Long creditCardId) {
+        try {
+            List<Donation> donations = donationService.getDonationByCreditCard(creditCardId);
+            return new ResponseEntity<>(donationDTOMapper.convertList(donations), HttpStatus.OK);
+        } catch (RowNotFoundException e) {
+            return ExceptionHandlerUtils.rowNotFoundException(e.getMessage());
         } catch (Exception e) {
             return ExceptionHandlerUtils.unexpectedException(e.getMessage());
         }

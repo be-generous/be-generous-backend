@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -39,5 +40,32 @@ public class DonationServiceImpl implements DonationService {
         donation.setCreditCard(creditCard);
         donation.setCharity(charity);
         return donationRepo.save(donation);
+    }
+
+    @Override
+    public List<Donation> getDonationByCharity(Long charityId) throws RowNotFoundException {
+        List<Donation> donations = donationRepo.findAllByCharityId(charityId).get();
+        if(donations.size() == 0) {
+            throw new RowNotFoundException("No donation was made to the charity: " + charityId);
+        }
+        return donations;
+    }
+
+    @Override
+    public List<Donation> getDonationByUser(Long userId) throws RowNotFoundException {
+        List<Donation> donations = donationRepo.findAllByUserId(userId).get();
+        if(donations.size() == 0) {
+            throw new RowNotFoundException("No donation was made from user: " + userId);
+        }
+        return donations;
+    }
+
+    @Override
+    public List<Donation> getDonationByCreditCard(Long creditCardId) throws RowNotFoundException {
+        List<Donation> donations = donationRepo.findAllByCreditCardId(creditCardId).get();
+        if(donations.size() == 0) {
+            throw new RowNotFoundException("No donation was made from the credit card: " + creditCardId);
+        }
+        return donations;
     }
 }
