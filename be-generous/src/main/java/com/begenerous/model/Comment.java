@@ -5,9 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Data
 @Entity
@@ -54,4 +51,10 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "charity_id", nullable = false)
     private Charity charity;
+
+    public Comment(String comment, Boolean isAnonymous, Long dateCreated) {
+        this.comment = comment;
+        this.isAnonymous = isAnonymous;
+        this.dateCreated = dateCreated;
+    }
 }
