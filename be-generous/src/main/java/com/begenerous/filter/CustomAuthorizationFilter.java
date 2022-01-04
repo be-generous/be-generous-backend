@@ -29,7 +29,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        /** If someone wants to login then it is permited */
+        /** If someone wants to login then it is permitted */
         if (request.getServletPath().equals("/api/login")) {
             filterChain.doFilter(request, response);
         } else {
